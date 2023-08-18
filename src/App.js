@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import styled from 'styled-components';
+import useToggle from'./useToggle'
+import ThemeContext from "./ThemeContext";
+import Navbar from './Navbar';
+import { Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import APOD from './APOD';
+import APODAny from './APODAny';
+import NIVL from './NIVL';
+import PBR from './PBR';
+import MarsWeather from './MarsWeather';
 
+
+const StyledApp = styled.div`
+	width: 100%;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background: ${({ light }) => (light ? "#F4F4FFF0" : "#242629")};
+	color: ${({ light }) => (light ? "rgba(0, 0, 0, 0.781)" : "rgb(256,256,256,0.8)")};
+`;
 function App() {
+  const [light, toggleLight] = useToggle(true);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+		<ThemeContext.Provider value={[light, toggleLight]}>
+			<StyledApp light={light}>
+				<Navbar />
+                <Routes>
+					<Route exact path='/apod' element={<APOD />} />
+					<Route exact path='/apodany' element={<APODAny />} />
+					<Route exact path='/nivl' element={<NIVL />} />
+					<Route exact path='/pbr' element={<PBR />} />
+					<Route exact path='/weather' element={<MarsWeather />} />
+					<Route path='/' element={<Home />} />
+				</Routes>
+			</StyledApp>
+		</ThemeContext.Provider>
   );
 }
 
